@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { HiMail, HiPhone, HiLocationMarker, HiPaperAirplane } from 'react-icons/hi';
-import { FaInstagram, FaFacebookF, FaTwitter } from 'react-icons/fa';
+import { FaInstagram, FaFacebookF } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
 const Contact = () => {
@@ -30,15 +30,14 @@ const Contact = () => {
   };
 
   const contactInfo = [
-    { icon: <HiMail />, label: 'Email', value: 'hello@suhzan.art' },
-    { icon: <HiPhone />, label: 'Phone', value: '+1 (555) 123-4567' },
-    { icon: <HiLocationMarker />, label: 'Studio', value: 'Your City, Country' },
+    { icon: <HiMail />, label: 'Email', value: 'iamsulazan@gmail.com', href: 'mailto:iamsulazan@gmail.com' },
+    { icon: <HiPhone />, label: 'Phone', value: '+977 9843931831', href: 'tel:+9779843931831' },
+    { icon: <HiLocationMarker />, label: 'Location', value: 'Kaldhara, Kathmandu, Nepal' },
   ];
 
   const socialLinks = [
-    { icon: <FaInstagram />, href: '#', label: 'Instagram' },
-    { icon: <FaFacebookF />, href: '#', label: 'Facebook' },
-    { icon: <FaTwitter />, href: '#', label: 'Twitter' },
+    { icon: <FaInstagram />, href: 'https://instagram.com/', label: 'Instagram' },
+    { icon: <FaFacebookF />, href: 'https://facebook.com/', label: 'Facebook' },
   ];
 
   return (
@@ -60,9 +59,9 @@ const Contact = () => {
               <span className="text-gradient">Something Beautiful</span>
             </h2>
             <p className="text-light-300 mb-8">
-              Have a question about my work, interested in art lessons, or want 
-              to commission a custom portrait? I'd love to hear from you. Fill 
-              out the form and I'll get back to you as soon as possible.
+              Interested in commissioning a portrait, purchasing artwork, or 
+              collaborating on a project? I'd love to hear from you. Fill out 
+              the form and I'll get back to you as soon as possible.
             </p>
 
             {/* Contact Info */}
@@ -75,7 +74,13 @@ const Contact = () => {
                   </div>
                   <div>
                     <span className="text-xs text-dark-400 uppercase">{item.label}</span>
-                    <p className="text-light">{item.value}</p>
+                    {item.href ? (
+                      <a href={item.href} className="block text-light hover:text-primary transition-colors">
+                        {item.value}
+                      </a>
+                    ) : (
+                      <p className="text-light">{item.value}</p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -122,7 +127,7 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     className="input"
-                    placeholder="John Doe"
+                    placeholder="Your Name"
                   />
                 </div>
                 <div>
@@ -134,7 +139,7 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     className="input"
-                    placeholder="john@example.com"
+                    placeholder="you@example.com"
                   />
                 </div>
               </div>
@@ -150,8 +155,9 @@ const Contact = () => {
                 >
                   <option value="">Select a subject</option>
                   <option value="commission">Commission Inquiry</option>
-                  <option value="lessons">Art Lessons</option>
-                  <option value="purchase">Purchase Inquiry</option>
+                  <option value="purchase">Purchase Artwork</option>
+                  <option value="collaboration">Collaboration</option>
+                  <option value="exhibition">Exhibition Inquiry</option>
                   <option value="general">General Question</option>
                 </select>
               </div>

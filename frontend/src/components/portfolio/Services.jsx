@@ -14,7 +14,7 @@ const Services = () => {
         'All skill levels welcome',
         'Materials guidance',
       ],
-      price: '$75/hour',
+      price: 'Rs 1500/hour',
     },
     {
       icon: <HiUserGroup />,
@@ -26,7 +26,7 @@ const Services = () => {
         'Live demonstrations',
         'Peer feedback sessions',
       ],
-      price: '$45/session',
+      price: 'Rs 1500/session',
       popular: true,
     },
     {
@@ -39,7 +39,7 @@ const Services = () => {
         'Progress updates',
         'Framing options',
       ],
-      price: 'From $500',
+      price: 'From Rs 2000',
     },
   ];
 

@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
-import { HiAcademicCap, HiColorSwatch, HiStar, HiUsers } from 'react-icons/hi';
+import { HiAcademicCap, HiColorSwatch, HiStar, HiGlobe } from 'react-icons/hi';
+import profileImage from '../../assets/profile.jpeg';
 
 const About = () => {
   const stats = [
-    { icon: <HiColorSwatch />, value: '150+', label: 'Original Works' },
-    { icon: <HiStar />, value: '25+', label: 'Awards Won' },
-    { icon: <HiUsers />, value: '500+', label: 'Happy Clients' },
-    { icon: <HiAcademicCap />, value: '100+', label: 'Students Taught' },
+    { icon: <HiColorSwatch />, value: '50+', label: 'Original Works' },
+    { icon: <HiStar />, value: '10+', label: 'Exhibitions' },
+    { icon: <HiGlobe />, value: 'National', label: '& International' },
+    { icon: <HiAcademicCap />, value: 'Pagoda', label: 'Institute' },
   ];
 
   return (
@@ -23,9 +24,9 @@ const About = () => {
           >
             <div className="aspect-[4/5] rounded-2xl overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800"
-                alt="Artist at work"
-                className="w-full h-full object-cover"
+                src={profileImage}
+                alt="Sujan Budhathoki - Visual Artist"
+                className="w-full h-full object-cover object-top"
               />
             </div>
             {/* Decorative Elements */}
@@ -45,26 +46,26 @@ const About = () => {
               About the Artist
             </span>
             <h2 className="text-4xl md:text-5xl font-display font-semibold mt-2 mb-6">
-              Creating Art That <br />
-              <span className="text-gradient">Speaks to the Soul</span>
+              Sujan Budhathoki <br />
+              <span className="text-gradient">Visual Artist</span>
             </h2>
             <div className="space-y-4 text-light-300 mb-8">
               <p>
-                As a fine art artist specializing in portrait painting, I've dedicated 
-                my life to capturing the essence of human emotion on canvas. Each 
-                brushstroke is a conversation between the subject and the viewer, 
-                revealing stories that words cannot express.
+                A young and emerging visual artist of Nepal, I received my training 
+                from the prestigious <strong className="text-primary">Pagoda Institute of Fine Art</strong>, 
+                under the guidance of renowned Artist <strong className="text-light">Roshan Pradhan</strong>, 
+                where I continue to be an active member.
               </p>
               <p>
-                With over a decade of experience and numerous international competitions 
-                under my belt, I continue to push the boundaries of traditional 
-                portraiture while honoring the classical techniques that have inspired 
-                artists for centuries.
+                I am known for my poetic depiction of inner conscience and 
+                contemporary conceptual thoughts in my works. There's a saying that 
+                an artist speaks with his work rather than words — a philosophy that 
+                is deeply embodied in everything I create.
               </p>
               <p>
-                When I'm not painting, I share my passion as an art instructor, 
-                helping aspiring artists discover their unique voice and master the 
-                craft of fine art.
+                I have participated in various <strong className="text-light">national and international 
+                art exhibitions</strong>, continuously pushing the boundaries of visual 
+                expression while staying true to my artistic vision.
               </p>
             </div>
 

@@ -1,14 +1,12 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { HiArrowRight } from 'react-icons/hi';
-import { useFeaturedArtworks } from '../../hooks/useArtworks';
+import heroImage from '../../assets/heroimage.jpeg';
 
 const Hero = () => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const { artworks } = useFeaturedArtworks(1);
-  const heroImage = artworks[0]?.media[0]?.url || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1920';
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -18,10 +16,12 @@ const Hero = () => {
         className="absolute inset-0 z-0"
       >
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
           style={{ backgroundImage: `url(${heroImage})` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-dark/60 via-dark/40 to-dark" />
+        {/* Gradient Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/50 to-dark" />
+        <div className="absolute inset-0 bg-gradient-to-r from-dark/60 via-transparent to-dark/60" />
       </motion.div>
 
       {/* Content */}
@@ -35,8 +35,8 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <span className="inline-block px-4 py-2 mb-6 text-sm font-medium text-primary 
-                         border border-primary/30 rounded-full bg-primary/10">
-            Fine Art Portfolio
+                         border border-primary/30 rounded-full bg-dark/50 backdrop-blur-sm">
+            Visual Art Portfolio
           </span>
         </motion.div>
 
@@ -44,21 +44,21 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-display font-semibold mb-6"
+          className="text-5xl md:text-7xl lg:text-8xl font-display font-semibold mb-6 drop-shadow-2xl"
         >
-          <span className="text-light">The Art of</span>
+          <span className="text-light">Sujan</span>
           <br />
-          <span className="text-gradient">Portrait Painting</span>
+          <span className="text-gradient">Budhathoki</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-lg md:text-xl text-light-300 max-w-2xl mx-auto mb-10"
+          className="text-lg md:text-xl text-light-200 max-w-2xl mx-auto mb-10 drop-shadow-lg"
         >
-          Capturing emotions, stories, and the essence of human connection 
-          through the timeless medium of paint.
+          A young and emerging visual artist of Nepal, known for poetic depiction 
+          of inner conscience and contemporary conceptual thoughts.
         </motion.p>
 
         <motion.div
@@ -67,12 +67,12 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <Link to="/gallery" className="btn btn-primary gap-2 text-lg px-8 py-4">
+          <Link to="/gallery" className="btn btn-primary gap-2 text-lg px-8 py-4 shadow-lg shadow-primary/25">
             View Gallery
             <HiArrowRight />
           </Link>
-          <Link to="/contact" className="btn btn-outline text-lg px-8 py-4">
-            Commission a Portrait
+          <Link to="/contact" className="btn btn-outline text-lg px-8 py-4 backdrop-blur-sm">
+            Get in Touch
           </Link>
         </motion.div>
       </motion.div>
@@ -87,7 +87,7 @@ const Hero = () => {
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-light-300 flex justify-center pt-2"
+          className="w-6 h-10 rounded-full border-2 border-light/50 flex justify-center pt-2"
         >
           <motion.div
             animate={{ opacity: [1, 0, 1], y: [0, 10, 0] }}

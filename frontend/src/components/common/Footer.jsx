@@ -1,15 +1,13 @@
 import { Link } from 'react-router-dom';
-import { FaInstagram, FaFacebookF, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { FaInstagram, FaFacebookF } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: <FaInstagram size={20} />, href: '#', label: 'Instagram' },
-    { icon: <FaFacebookF size={18} />, href: '#', label: 'Facebook' },
-    { icon: <FaTwitter size={20} />, href: '#', label: 'Twitter' },
-    { icon: <FaYoutube size={20} />, href: '#', label: 'YouTube' },
+    { icon: <FaInstagram size={20} />, href: 'https://instagram.com/', label: 'Instagram' },
+    { icon: <FaFacebookF size={18} />, href: 'https://facebook.com/', label: 'Facebook' },
   ];
 
   const footerLinks = [
@@ -27,12 +25,13 @@ const Footer = () => {
           <div className="md:col-span-2">
             <Link to="/" className="inline-block mb-4">
               <span className="text-3xl font-display font-semibold text-gradient">
-                SUHZAN
+                SUJAN
               </span>
             </Link>
             <p className="text-light-300 text-sm mb-6 max-w-md">
-              Fine art artist specializing in portrait painting. Capturing emotions 
-              and stories through the timeless medium of paint.
+              Visual artist from Nepal, trained at Pagoda Institute of Fine Art. 
+              Known for poetic depiction of inner conscience and contemporary 
+              conceptual thoughts in artwork.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social, index) => (
@@ -77,10 +76,18 @@ const Footer = () => {
               Contact
             </h4>
             <ul className="space-y-2 text-sm text-light-300">
-              <li>hello@suhzan.art</li>
-              <li>+1 (555) 123-4567</li>
-              <li>Studio Address</li>
-              <li>Your City, Country</li>
+              <li>
+                <a href="mailto:iamsulazan@gmail.com" className="hover:text-primary transition-colors">
+                  iamsulazan@gmail.com
+                </a>
+              </li>
+              <li>
+                <a href="tel:+9779843931831" className="hover:text-primary transition-colors">
+                  +977 9843931831
+                </a>
+              </li>
+              <li>Kaldhara, Kathmandu</li>
+              <li>Nepal</li>
             </ul>
           </div>
         </div>
@@ -88,10 +95,10 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-dark-300 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-light-300 text-sm">
-            © {currentYear} Suhzan Fine Art. All rights reserved.
+            © {currentYear} Sujan Budhathoki. All rights reserved.
           </p>
           <p className="text-light-300 text-xs">
-            Handcrafted with passion for art
+            Visual Artist • Kathmandu, Nepal
           </p>
         </div>
       </div>

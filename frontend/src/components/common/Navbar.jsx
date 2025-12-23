@@ -43,10 +43,10 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <span className="text-2xl font-display font-semibold text-gradient">
-            SUHZAN
+            SUJAN
           </span>
           <span className="text-sm text-light-300 hidden sm:inline">
-            Fine Art
+            Visual Art
           </span>
         </Link>
 

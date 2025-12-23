@@ -60,7 +60,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <div className="p-6 border-b border-dark-300">
             <Link to="/" className="flex items-center gap-2">
               <span className="text-2xl font-display font-semibold text-gradient">
-                SUHZAN
+                SUJAN
               </span>
             </Link>
             <p className="text-xs text-dark-400 mt-1">Admin Dashboard</p>

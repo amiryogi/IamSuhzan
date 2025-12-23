@@ -37,7 +37,7 @@ const Login = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-block">
             <span className="text-4xl font-display font-semibold text-gradient">
-              SUHZAN
+              SUJAN
             </span>
           </Link>
           <p className="text-light-300 mt-2">Admin Dashboard</p>
@@ -54,15 +54,15 @@ const Login = () => {
                 Email Address
               </label>
               <div className="relative">
-                <HiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-dark-400" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="input pl-11"
+                  className="input pr-12"
                   placeholder="admin@artportfolio.com"
                 />
+                <HiMail className="absolute right-4 top-1/2 -translate-y-1/2 text-dark-400 text-lg" />
               </div>
             </div>
 
@@ -71,15 +71,15 @@ const Login = () => {
                 Password
               </label>
               <div className="relative">
-                <HiLockClosed className="absolute left-4 top-1/2 -translate-y-1/2 text-dark-400" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="input pl-11"
+                  className="input pr-12"
                   placeholder="••••••••"
                 />
+                <HiLockClosed className="absolute right-4 top-1/2 -translate-y-1/2 text-dark-400 text-lg" />
               </div>
             </div>
 

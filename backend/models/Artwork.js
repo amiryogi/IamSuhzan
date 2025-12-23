@@ -127,7 +127,7 @@ const ArtworkSchema = new mongoose.Schema(
 );
 
 // Create slug from title
-ArtworkSchema.pre('save', function (next) {
+ArtworkSchema.pre('save', function () {
   if (this.isModified('title')) {
     this.slug = this.title
       .toLowerCase()
@@ -136,7 +136,6 @@ ArtworkSchema.pre('save', function (next) {
     // Add timestamp to ensure uniqueness
     this.slug = `${this.slug}-${Date.now().toString(36)}`;
   }
-  next();
 });
 
 // Index for searching
