@@ -1,10 +1,18 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { HiMail, HiPhone, HiLocationMarker, HiPaperAirplane } from 'react-icons/hi';
-import { FaInstagram, FaFacebookF } from 'react-icons/fa';
+import { HiMail, HiPhone, HiLocationMarker, HiPaperAirplane, HiGlobeAlt } from 'react-icons/hi';
+import { FaInstagram, FaFacebookF, FaTwitter, FaYoutube } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import { messagesAPI } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+import boraImage from '../../assets/bora.jpg';
+import { useScroll, useTransform } from 'framer-motion';
 
 const Contact = () => {
+  const { publicProfile } = useAuth();
+  const profile = publicProfile;
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,13 +28,16 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
-    toast.success('Message sent successfully! I\'ll get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    setIsSubmitting(false);
+
+    try {
+      await messagesAPI.send(formData);
+      toast.success('Message sent successfully! I\'ll get back to you soon.');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -36,19 +47,41 @@ const Contact = () => {
   ];
 
   const socialLinks = [
-    { icon: <FaInstagram />, href: 'https://instagram.com/', label: 'Instagram' },
-    { icon: <FaFacebookF />, href: 'https://facebook.com/', label: 'Facebook' },
-  ];
+    profile?.socialLinks?.instagram && { icon: <FaInstagram />, href: profile.socialLinks.instagram, label: 'Instagram' },
+    profile?.socialLinks?.facebook && { icon: <FaFacebookF />, href: profile.socialLinks.facebook, label: 'Facebook' },
+    profile?.socialLinks?.twitter && { icon: <FaTwitter />, href: profile.socialLinks.twitter, label: 'Twitter' },
+    profile?.socialLinks?.youtube && { icon: <FaYoutube />, href: profile.socialLinks.youtube, label: 'YouTube' },
+    profile?.socialLinks?.website && { icon: <HiGlobeAlt />, href: profile.socialLinks.website, label: 'Website' },
+  ].filter(Boolean);
+
+  if (socialLinks.length === 0 && !profile) {
+    socialLinks.push(
+      { icon: <FaInstagram />, href: 'https://instagram.com/', label: 'Instagram' },
+      { icon: <FaFacebookF />, href: 'https://facebook.com/', label: 'Facebook' }
+    );
+  }
 
   return (
-    <section className="section bg-dark">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <section className="section relative overflow-hidden min-h-screen flex items-center">
+      {/* Background Image with Parallax & Overlay */}
+      <div className="absolute inset-0 z-0">
+        <motion.div
+          style={{
+            backgroundImage: `url(${boraImage})`,
+            y
+          }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform"
+        />
+        <div className="absolute inset-0 bg-dark/80 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-dark/50" />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Left Side - Info */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
             <span className="text-primary text-sm font-medium uppercase tracking-wider">
@@ -59,8 +92,8 @@ const Contact = () => {
               <span className="text-gradient">Something Beautiful</span>
             </h2>
             <p className="text-light-300 mb-8">
-              Interested in commissioning a portrait, purchasing artwork, or 
-              collaborating on a project? I'd love to hear from you. Fill out 
+              Interested in commissioning a portrait, purchasing artwork, or
+              collaborating on a project? I'd love to hear from you. Fill out
               the form and I'll get back to you as soon as possible.
             </p>
 
@@ -112,9 +145,8 @@ const Contact = () => {
           {/* Right Side - Form */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
             <form onSubmit={handleSubmit} className="bg-dark-100 rounded-2xl p-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

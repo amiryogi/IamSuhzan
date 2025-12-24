@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { HiArrowRight } from 'react-icons/hi';
 import heroImage from '../../assets/heroimage.jpeg';
+import BrushStroke from '../common/BrushStroke';
 
 const Hero = () => {
   const { scrollY } = useScroll();
@@ -44,11 +45,17 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-display font-semibold mb-6 drop-shadow-2xl"
+          className="text-5xl md:text-7xl lg:text-8xl font-display font-semibold mb-6 drop-shadow-2xl relative inline-block mx-auto"
         >
           <span className="text-light">Sujan</span>
           <br />
-          <span className="text-gradient">Budhathoki</span>
+          <div className="relative inline-block">
+            <span className="text-gradient">Budhathoki</span>
+            <BrushStroke
+              className="absolute -bottom-2 md:-bottom-4 left-0 w-full h-4 md:h-6"
+              delay={1}
+            />
+          </div>
         </motion.h1>
 
         <motion.p
@@ -57,7 +64,7 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-lg md:text-xl text-light-200 max-w-2xl mx-auto mb-10 drop-shadow-lg"
         >
-          A young and emerging visual artist of Nepal, known for poetic depiction 
+          A young and emerging visual artist of Nepal, known for poetic depiction
           of inner conscience and contemporary conceptual thoughts.
         </motion.p>
 

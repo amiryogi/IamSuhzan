@@ -69,7 +69,7 @@ const Achievements = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
           className="text-center mb-12"
         >
           <span className="text-primary text-sm font-medium uppercase tracking-wider">
@@ -79,7 +79,7 @@ const Achievements = () => {
             Awards & Achievements
           </h2>
           <p className="text-light-300 max-w-2xl mx-auto">
-            A journey of growth, recognition, and dedication to the art of 
+            A journey of growth, recognition, and dedication to the art of
             portrait painting.
           </p>
         </motion.div>
@@ -91,13 +91,13 @@ const Achievements = () => {
               key={index}
               initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="relative flex gap-6 pb-8 last:pb-0"
             >
               {/* Timeline Line */}
               <div className="absolute left-[27px] top-12 bottom-0 w-0.5 bg-dark-300" />
-              
+
               {/* Year Badge */}
               <div className="relative z-10 flex-shrink-0">
                 <div className="w-14 h-14 rounded-full bg-dark-200 border-2 border-primary 
