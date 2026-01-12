@@ -54,12 +54,16 @@ const HeroSlideForm = () => {
     }));
   };
 
-  const handleImageUpload = (media) => {
-    setFormData((prev) => ({
-      ...prev,
-      imageUrl: media.url,
-      imagePublicId: media.publicId,
-    }));
+  const handleImageUpload = (mediaArray) => {
+    // MediaUploader returns an array, we take the first item
+    if (mediaArray && mediaArray.length > 0) {
+      const media = mediaArray[0];
+      setFormData((prev) => ({
+        ...prev,
+        imageUrl: media.url,
+        imagePublicId: media.publicId,
+      }));
+    }
   };
 
   const handleRemoveImage = async () => {
