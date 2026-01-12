@@ -50,6 +50,7 @@ const uploadRoutes = require("./routes/upload");
 const heroSlideRoutes = require("./routes/heroSlides");
 const awardRoutes = require("./routes/awards");
 const messageRoutes = require("./routes/messages");
+const photographyRoutes = require("./routes/photography");
 
 // Mount routers
 app.use("/api/auth", authRoutes);
@@ -59,6 +60,7 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/hero-slides", heroSlideRoutes);
 app.use("/api/awards", awardRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/photography", photographyRoutes);
 
 // Health check route
 app.get("/api/health", (req, res) => {

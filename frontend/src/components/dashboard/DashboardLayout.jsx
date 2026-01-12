@@ -17,6 +17,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       label: "Artworks",
     },
     {
+      path: "/dashboard/photography",
+      icon: <HiIcons.HiCamera />,
+      label: "Photography",
+    },
+    {
       path: "/dashboard/hero-slides",
       icon: <HiIcons.HiTemplate />,
       label: "Hero Slides",

@@ -124,4 +124,16 @@ export const awardsAPI = {
   delete: (id) => api.delete(`/awards/${id}`),
 };
 
+// Photography API
+export const photographyAPI = {
+  getAll: (params) => api.get("/photography", { params }),
+  getLatest: (limit = 6) =>
+    api.get("/photography/latest", { params: { limit } }),
+  getCategories: () => api.get("/photography/categories"),
+  getById: (id) => api.get(`/photography/${id}`),
+  create: (data) => api.post("/photography", data),
+  update: (id, data) => api.put(`/photography/${id}`, data),
+  delete: (id) => api.delete(`/photography/${id}`),
+};
+
 export default api;

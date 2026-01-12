@@ -9,6 +9,8 @@ import AwardList from "../components/dashboard/AwardList";
 import AwardForm from "../components/dashboard/AwardForm";
 import CategoryList from "../components/dashboard/CategoryList";
 import CategoryForm from "../components/dashboard/CategoryForm";
+import PhotographyList from "../components/dashboard/PhotographyList";
+import PhotographyForm from "../components/dashboard/PhotographyForm";
 import MediaUploader from "../components/dashboard/MediaUploader";
 import ProfileSettings from "../components/dashboard/ProfileSettings";
 import MessageInbox from "../components/dashboard/MessageInbox";
@@ -57,6 +59,9 @@ const Dashboard = () => {
         <Route path="categories" element={<CategoryList />} />
         <Route path="categories/new" element={<CategoryForm />} />
         <Route path="categories/:id/edit" element={<CategoryForm />} />
+        <Route path="photography" element={<PhotographyList />} />
+        <Route path="photography/new" element={<PhotographyForm />} />
+        <Route path="photography/:id/edit" element={<PhotographyForm />} />
         <Route path="messages" element={<MessageInbox />} />
         <Route path="settings" element={<ProfileSettings />} />
       </Routes>

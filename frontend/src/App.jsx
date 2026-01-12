@@ -1,21 +1,27 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import { AnimatePresence } from 'framer-motion';
-import AuthProvider from './context/AuthContext';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { AnimatePresence } from "framer-motion";
+import AuthProvider from "./context/AuthContext";
 
 // Layout Components
-import Navbar from './components/common/Navbar';
-import Footer from './components/common/Footer';
+import Navbar from "./components/common/Navbar";
+import Footer from "./components/common/Footer";
 
 // Pages
-import Home from './pages/Home';
-import GalleryPage from './pages/GalleryPage';
-import AboutPage from './pages/AboutPage';
-import ServicesPage from './pages/ServicesPage';
-import ContactPage from './pages/ContactPage';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import ScrollToTop from './components/common/ScrollToTop';
+import Home from "./pages/Home";
+import GalleryPage from "./pages/GalleryPage";
+import PhotographyPage from "./pages/PhotographyPage";
+import AboutPage from "./pages/AboutPage";
+import ServicesPage from "./pages/ServicesPage";
+import ContactPage from "./pages/ContactPage";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 // Layout wrapper for public pages
 const PublicLayout = ({ children }) => {
@@ -31,18 +37,61 @@ const PublicLayout = ({ children }) => {
 // Animated Routes
 const AnimatedRoutes = () => {
   const location = useLocation();
-  const isDashboard = location.pathname.startsWith('/dashboard');
-  const isLogin = location.pathname === '/login';
+  const isDashboard = location.pathname.startsWith("/dashboard");
+  const isLogin = location.pathname === "/login";
 
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Public Routes */}
-        <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-        <Route path="/gallery" element={<PublicLayout><GalleryPage /></PublicLayout>} />
-        <Route path="/about" element={<PublicLayout><AboutPage /></PublicLayout>} />
-        <Route path="/services" element={<PublicLayout><ServicesPage /></PublicLayout>} />
-        <Route path="/contact" element={<PublicLayout><ContactPage /></PublicLayout>} />
+        <Route
+          path="/"
+          element={
+            <PublicLayout>
+              <Home />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/gallery"
+          element={
+            <PublicLayout>
+              <GalleryPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/photography"
+          element={
+            <PublicLayout>
+              <PhotographyPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <PublicLayout>
+              <AboutPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/services"
+          element={
+            <PublicLayout>
+              <ServicesPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <PublicLayout>
+              <ContactPage />
+            </PublicLayout>
+          }
+        />
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
@@ -65,20 +114,20 @@ function App() {
           toastOptions={{
             duration: 4000,
             style: {
-              background: '#1A1A1A',
-              color: '#FAFAFA',
-              border: '1px solid #333333',
+              background: "#1A1A1A",
+              color: "#FAFAFA",
+              border: "1px solid #333333",
             },
             success: {
               iconTheme: {
-                primary: '#C9A962',
-                secondary: '#0D0D0D',
+                primary: "#C9A962",
+                secondary: "#0D0D0D",
               },
             },
             error: {
               iconTheme: {
-                primary: '#EF4444',
-                secondary: '#FAFAFA',
+                primary: "#EF4444",
+                secondary: "#FAFAFA",
               },
             },
           }}

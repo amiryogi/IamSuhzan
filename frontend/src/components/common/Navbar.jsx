@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { HiMenu, HiX } from 'react-icons/hi';
-import { useAuth } from '../../context/AuthContext';
-import brushCursor from '../../assets/brush.png';
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { HiMenu, HiX } from "react-icons/hi";
+import { useAuth } from "../../context/AuthContext";
+import brushCursor from "../../assets/brush.png";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,8 +15,8 @@ const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -24,11 +24,12 @@ const Navbar = () => {
   }, [location]);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Gallery', path: '/gallery' },
-    { name: 'About', path: '/about' },
-    { name: 'Services', path: '/services' },
-    { name: 'Contact', path: '/contact' },
+    { name: "Home", path: "/" },
+    { name: "Gallery", path: "/gallery" },
+    { name: "Photography", path: "/photography" },
+    { name: "About", path: "/about" },
+    { name: "Services", path: "/services" },
+    { name: "Contact", path: "/contact" },
   ];
 
   return (
@@ -36,8 +37,9 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'glass py-4' : 'bg-transparent py-6'
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "glass py-4" : "bg-transparent py-6"
+      }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
@@ -57,19 +59,17 @@ const Navbar = () => {
               key={link.path}
               to={link.path}
               style={{ cursor: `url(${brushCursor}), pointer` }}
-              className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === link.path
-                ? 'text-primary'
-                : 'text-light-200'
-                }`}
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                location.pathname === link.path
+                  ? "text-primary"
+                  : "text-light-200"
+              }`}
             >
               {link.name}
             </Link>
           ))}
           {isAuthenticated && (
-            <Link
-              to="/dashboard"
-              className="btn btn-primary text-sm"
-            >
+            <Link to="/dashboard" className="btn btn-primary text-sm">
               Dashboard
             </Link>
           )}
@@ -89,7 +89,7 @@ const Navbar = () => {
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden glass border-t border-light/10 shadow-xl"
           >
@@ -99,19 +99,17 @@ const Navbar = () => {
                   key={link.path}
                   to={link.path}
                   style={{ cursor: `url(${brushCursor}), pointer` }}
-                  className={`text-sm font-medium py-2 transition-colors ${location.pathname === link.path
-                    ? 'text-primary'
-                    : 'text-light-200'
-                    }`}
+                  className={`text-sm font-medium py-2 transition-colors ${
+                    location.pathname === link.path
+                      ? "text-primary"
+                      : "text-light-200"
+                  }`}
                 >
                   {link.name}
                 </Link>
               ))}
               {isAuthenticated && (
-                <Link
-                  to="/dashboard"
-                  className="btn btn-primary text-sm mt-2"
-                >
+                <Link to="/dashboard" className="btn btn-primary text-sm mt-2">
                   Dashboard
                 </Link>
               )}
