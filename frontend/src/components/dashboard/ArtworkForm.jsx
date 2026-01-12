@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { HiArrowLeft, HiSave, HiTrash } from 'react-icons/hi';
+import { HiArrowLeft, HiSave, HiTrash, HiPlus } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 import { artworksAPI, categoriesAPI } from '../../services/api';
 import MediaUploader from './MediaUploader';
@@ -32,6 +32,7 @@ const ArtworkForm = () => {
     featured: false,
     status: 'published',
     competition: { name: '', year: '', award: '', position: '' },
+    features: [],
   });
 
   useEffect(() => {
@@ -57,6 +58,7 @@ const ArtworkForm = () => {
         tags: artwork.tags?.join(', ') || '',
         category: artwork.category?._id || '',
         dimensions: artwork.dimensions || { width: '', height: '', unit: 'inches' },
+        features: artwork.features || [],
         competition: artwork.competition || { name: '', year: '', award: '', position: '' },
       });
     } catch (error) {
@@ -97,7 +99,31 @@ const ArtworkForm = () => {
       media: prev.media.filter((_, i) => i !== index),
     }));
   };
+// Feature management functions
+  const addFeature = () => {
+    setFormData((prev) => ({
+      ...prev,
+      features: [...prev.features, { title: '', description: '' }],
+    }));
+  };
 
+  const updateFeature = (index, field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      features: prev.features.map((feature, i) =>
+        i === index ? { ...feature, [field]: value } : feature
+      ),
+    }));
+  };
+
+  const removeFeature = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      features: prev.features.filter((_, i) => i !== index),
+    }));
+  };
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -333,7 +359,64 @@ const ArtworkForm = () => {
               <span className="text-light-300">Sold</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
-              <input
+            Features */}
+        <section className="bg-dark-100 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-medium text-light">Features</h2>
+              <p className="text-sm text-dark-400">Highlight key aspects of this artwork</p>
+            </div>
+            <button
+              type="button"
+              onClick={addFeature}
+              className="btn btn-outline btn-sm gap-1"
+            >
+              <HiPlus size={16} /> Add Feature
+            </button>
+          </div>
+
+          {formData.features.length === 0 ? (
+            <p className="text-dark-400 text-sm py-4 text-center">
+              No features added yet. Click "Add Feature" to highlight key aspects.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {formData.features.map((feature, index) => (
+                <div key={index} className="p-4 bg-dark-200 rounded-xl">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-1 space-y-3">
+                      <input
+                        type="text"
+                        value={feature.title}
+                        onChange={(e) => updateFeature(index, 'title', e.target.value)}
+                        className="input"
+                        placeholder="Feature title (e.g., Hand-painted details)"
+                        maxLength={100}
+                      />
+                      <textarea
+                        value={feature.description}
+                        onChange={(e) => updateFeature(index, 'description', e.target.value)}
+                        className="input resize-none"
+                        rows={2}
+                        placeholder="Brief description (optional)"
+                        maxLength={500}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeFeature(index)}
+                      className="p-2 text-error hover:bg-error/10 rounded-lg transition-colors"
+                    >
+                      <HiTrash size={18} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/*   <input
                 type="checkbox"
                 name="featured"
                 checked={formData.featured}

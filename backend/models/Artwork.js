@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const MediaSchema = new mongoose.Schema({
   url: {
@@ -11,8 +11,8 @@ const MediaSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['image', 'video'],
-    default: 'image',
+    enum: ["image", "video"],
+    default: "image",
   },
   width: Number,
   height: Number,
@@ -24,9 +24,9 @@ const ArtworkSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, 'Please add a title'],
+      required: [true, "Please add a title"],
       trim: true,
-      maxlength: [200, 'Title cannot be more than 200 characters'],
+      maxlength: [200, "Title cannot be more than 200 characters"],
     },
     slug: {
       type: String,
@@ -34,35 +34,35 @@ const ArtworkSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      maxlength: [5000, 'Description cannot be more than 5000 characters'],
+      maxlength: [5000, "Description cannot be more than 5000 characters"],
     },
     medium: {
       type: String,
       enum: [
-        'oil',
-        'acrylic',
-        'watercolor',
-        'charcoal',
-        'pencil',
-        'pastel',
-        'mixed-media',
-        'digital',
-        'other',
+        "oil",
+        "acrylic",
+        "watercolor",
+        "charcoal",
+        "pencil",
+        "pastel",
+        "mixed-media",
+        "digital",
+        "other",
       ],
-      default: 'oil',
+      default: "oil",
     },
     surface: {
       type: String,
-      enum: ['canvas', 'paper', 'wood', 'board', 'digital', 'other'],
-      default: 'canvas',
+      enum: ["canvas", "paper", "wood", "board", "digital", "other"],
+      default: "canvas",
     },
     dimensions: {
       width: Number,
       height: Number,
       unit: {
         type: String,
-        enum: ['inches', 'cm', 'pixels'],
-        default: 'inches',
+        enum: ["inches", "cm", "pixels"],
+        default: "inches",
       },
     },
     year: {
@@ -73,7 +73,7 @@ const ArtworkSchema = new mongoose.Schema(
     },
     currency: {
       type: String,
-      default: 'USD',
+      default: "USD",
     },
     isForSale: {
       type: Boolean,
@@ -85,7 +85,7 @@ const ArtworkSchema = new mongoose.Schema(
     },
     category: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Category',
+      ref: "Category",
     },
     tags: [
       {
@@ -108,8 +108,8 @@ const ArtworkSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['draft', 'published'],
-      default: 'published',
+      enum: ["draft", "published"],
+      default: "published",
     },
     // For competition entries
     competition: {
@@ -118,6 +118,22 @@ const ArtworkSchema = new mongoose.Schema(
       award: String,
       position: String,
     },
+    // Project features - highlights/key aspects of the artwork
+    features: [
+      {
+        title: {
+          type: String,
+          required: true,
+          trim: true,
+          maxlength: [100, "Feature title cannot exceed 100 characters"],
+        },
+        description: {
+          type: String,
+          trim: true,
+          maxlength: [500, "Feature description cannot exceed 500 characters"],
+        },
+      },
+    ],
   },
   {
     timestamps: true,
@@ -127,18 +143,18 @@ const ArtworkSchema = new mongoose.Schema(
 );
 
 // Create slug from title
-ArtworkSchema.pre('save', function () {
-  if (this.isModified('title')) {
+ArtworkSchema.pre("save", function () {
+  if (this.isModified("title")) {
     this.slug = this.title
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
     // Add timestamp to ensure uniqueness
     this.slug = `${this.slug}-${Date.now().toString(36)}`;
   }
 });
 
 // Index for searching
-ArtworkSchema.index({ title: 'text', description: 'text', tags: 'text' });
+ArtworkSchema.index({ title: "text", description: "text", tags: "text" });
 
-module.exports = mongoose.model('Artwork', ArtworkSchema);
+module.exports = mongoose.model("Artwork", ArtworkSchema);
