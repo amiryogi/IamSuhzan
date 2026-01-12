@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AnimatePresence } from 'framer-motion';
-import { AuthProvider } from './context/AuthContext';
+import AuthProvider from './context/AuthContext';
 
 // Layout Components
 import Navbar from './components/common/Navbar';
@@ -15,6 +15,7 @@ import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // Layout wrapper for public pages
 const PublicLayout = ({ children }) => {
@@ -42,10 +43,10 @@ const AnimatedRoutes = () => {
         <Route path="/about" element={<PublicLayout><AboutPage /></PublicLayout>} />
         <Route path="/services" element={<PublicLayout><ServicesPage /></PublicLayout>} />
         <Route path="/contact" element={<PublicLayout><ContactPage /></PublicLayout>} />
-        
+
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
-        
+
         {/* Dashboard Routes */}
         <Route path="/dashboard/*" element={<Dashboard />} />
       </Routes>
@@ -57,6 +58,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <AnimatedRoutes />
         <Toaster
           position="top-right"

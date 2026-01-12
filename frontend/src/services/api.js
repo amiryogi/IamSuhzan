@@ -41,6 +41,7 @@ export const authAPI = {
   login: (credentials) => api.post("/auth/login", credentials),
   register: (data) => api.post("/auth/register", data),
   getMe: () => api.get("/auth/me"),
+  getProfile: () => api.get("/auth/profile"),
   updateProfile: (data) => api.put("/auth/profile", data),
   logout: () => api.get("/auth/logout"),
 };
@@ -66,6 +67,15 @@ export const categoriesAPI = {
   create: (data) => api.post("/categories", data),
   update: (id, data) => api.put(`/categories/${id}`, data),
   delete: (id) => api.delete(`/categories/${id}`),
+};
+
+// Messages API
+export const messagesAPI = {
+  getAll: () => api.get("/messages"),
+  getById: (id) => api.get(`/messages/${id}`),
+  updateStatus: (id, isRead) => api.put(`/messages/${id}`, { isRead }),
+  delete: (id) => api.delete(`/messages/${id}`),
+  send: (data) => api.post("/messages", data),
 };
 
 // Upload API

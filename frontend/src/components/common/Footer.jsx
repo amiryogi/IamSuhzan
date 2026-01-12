@@ -25,12 +25,12 @@ const Footer = () => {
           <div className="md:col-span-2">
             <Link to="/" className="inline-block mb-4">
               <span className="text-3xl font-display font-semibold text-gradient">
-                SUJAN
+                IamSuhzan
               </span>
             </Link>
             <p className="text-light-300 text-sm mb-6 max-w-md">
-              Visual artist from Nepal, trained at Pagoda Institute of Fine Art. 
-              Known for poetic depiction of inner conscience and contemporary 
+              Visual artist from Nepal, trained at Pagoda Institute of Fine Art.
+              Known for poetic depiction of inner conscience and contemporary
               conceptual thoughts in artwork.
             </p>
             <div className="flex gap-4">

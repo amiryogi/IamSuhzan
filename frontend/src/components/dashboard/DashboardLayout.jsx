@@ -1,19 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  HiHome,
-  HiPhotograph,
-  HiTag,
-  HiUpload,
-  HiCog,
-  HiLogout,
-  HiMenuAlt2,
-  HiX,
-  HiChartBar,
-  HiTemplate,
-  HiStar,
-} from "react-icons/hi";
+import * as HiIcons from "react-icons/hi";
 import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
@@ -22,17 +10,30 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const { user, logout } = useAuth();
 
   const menuItems = [
-    { path: "/dashboard", icon: <HiChartBar />, label: "Overview" },
-    { path: "/dashboard/artworks", icon: <HiPhotograph />, label: "Artworks" },
+    { path: "/dashboard", icon: <HiIcons.HiChartBar />, label: "Overview" },
+    {
+      path: "/dashboard/artworks",
+      icon: <HiIcons.HiPhotograph />,
+      label: "Artworks",
+    },
     {
       path: "/dashboard/hero-slides",
-      icon: <HiTemplate />,
+      icon: <HiIcons.HiTemplate />,
       label: "Hero Slides",
     },
-    { path: "/dashboard/awards", icon: <HiStar />, label: "Awards" },
-    { path: "/dashboard/categories", icon: <HiTag />, label: "Categories" },
-    { path: "/dashboard/upload", icon: <HiUpload />, label: "Upload" },
-    { path: "/dashboard/settings", icon: <HiCog />, label: "Settings" },
+    { path: "/dashboard/awards", icon: <HiIcons.HiStar />, label: "Awards" },
+    {
+      path: "/dashboard/categories",
+      icon: <HiIcons.HiTag />,
+      label: "Categories",
+    },
+    {
+      path: "/dashboard/messages",
+      icon: <HiIcons.HiMail />,
+      label: "Messages",
+    },
+    { path: "/dashboard/upload", icon: <HiIcons.HiUpload />, label: "Upload" },
+    { path: "/dashboard/settings", icon: <HiIcons.HiCog />, label: "Settings" },
   ];
 
   const handleLogout = async () => {
@@ -122,7 +123,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl 
                        text-light-300 hover:bg-error/10 hover:text-error transition-colors"
             >
-              <HiLogout className="text-xl" />
+              <HiIcons.HiLogout className="text-xl" />
               <span className="font-medium">Logout</span>
             </button>
           </div>
@@ -149,7 +150,7 @@ const DashboardLayout = ({ children }) => {
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden p-2 text-light-300 hover:text-light"
           >
-            <HiMenuAlt2 size={24} />
+            <HiIcons.HiMenuAlt2 size={24} />
           </button>
 
           <div className="flex items-center gap-4">

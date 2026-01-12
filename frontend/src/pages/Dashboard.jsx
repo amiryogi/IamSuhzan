@@ -3,11 +3,15 @@ import DashboardLayout from "../components/dashboard/DashboardLayout";
 import StatsOverview from "../components/dashboard/StatsOverview";
 import ArtworkList from "../components/dashboard/ArtworkList";
 import ArtworkForm from "../components/dashboard/ArtworkForm";
-import MediaUploader from "../components/dashboard/MediaUploader";
 import HeroSlideList from "../components/dashboard/HeroSlideList";
 import HeroSlideForm from "../components/dashboard/HeroSlideForm";
 import AwardList from "../components/dashboard/AwardList";
 import AwardForm from "../components/dashboard/AwardForm";
+import CategoryList from "../components/dashboard/CategoryList";
+import CategoryForm from "../components/dashboard/CategoryForm";
+import MediaUploader from "../components/dashboard/MediaUploader";
+import ProfileSettings from "../components/dashboard/ProfileSettings";
+import MessageInbox from "../components/dashboard/MessageInbox";
 import { useAuth } from "../context/AuthContext";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 
@@ -50,28 +54,11 @@ const Dashboard = () => {
             </div>
           }
         />
-        <Route
-          path="categories"
-          element={
-            <div className="text-center py-12">
-              <h1 className="text-2xl font-display font-semibold text-light mb-4">
-                Category Management
-              </h1>
-              <p className="text-dark-400">Coming soon...</p>
-            </div>
-          }
-        />
-        <Route
-          path="settings"
-          element={
-            <div className="text-center py-12">
-              <h1 className="text-2xl font-display font-semibold text-light mb-4">
-                Settings
-              </h1>
-              <p className="text-dark-400">Coming soon...</p>
-            </div>
-          }
-        />
+        <Route path="categories" element={<CategoryList />} />
+        <Route path="categories/new" element={<CategoryForm />} />
+        <Route path="categories/:id/edit" element={<CategoryForm />} />
+        <Route path="messages" element={<MessageInbox />} />
+        <Route path="settings" element={<ProfileSettings />} />
       </Routes>
     </DashboardLayout>
   );

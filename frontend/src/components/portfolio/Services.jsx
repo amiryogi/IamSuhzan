@@ -49,8 +49,8 @@ const Services = () => {
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
           <span className="text-primary text-sm font-medium uppercase tracking-wider">
@@ -60,26 +60,24 @@ const Services = () => {
             Learn & Commission
           </h2>
           <p className="text-light-300 max-w-2xl mx-auto">
-            Whether you want to develop your artistic skills or commission a 
+            Whether you want to develop your artistic skills or commission a
             custom portrait, I'm here to help bring your vision to life.
           </p>
         </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className={`relative bg-dark rounded-2xl p-8 border transition-all
-                       hover:border-primary group ${
-                         service.popular
-                           ? 'border-primary shadow-lg shadow-primary/20'
-                           : 'border-dark-300'
-                       }`}
+                       hover:border-primary group ${service.popular
+                  ? 'border-primary shadow-lg shadow-primary/20'
+                  : 'border-dark-300'
+                }`}
             >
               {/* Popular Badge */}
               {service.popular && (
@@ -124,9 +122,8 @@ const Services = () => {
                 </div>
                 <Link
                   to="/contact"
-                  className={`btn ${
-                    service.popular ? 'btn-primary' : 'btn-outline'
-                  }`}
+                  className={`btn ${service.popular ? 'btn-primary' : 'btn-outline'
+                    }`}
                 >
                   Inquire
                 </Link>

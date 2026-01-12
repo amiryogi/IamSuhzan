@@ -77,6 +77,29 @@ exports.getMe = async (req, res, next) => {
   }
 };
 
+// @desc    Get public artist profile
+// @route   GET /api/auth/profile
+// @access  Public
+exports.getProfile = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ role: 'admin' });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Profile not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // @desc    Update user profile
 // @route   PUT /api/auth/profile
 // @access  Private

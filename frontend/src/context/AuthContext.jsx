@@ -1,16 +1,38 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authAPI } from '../services/api';
+import { authAPI, categoriesAPI } from '../services/api';
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [publicProfile, setPublicProfile] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     checkAuth();
+    fetchPublicProfile();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await categoriesAPI.getAll();
+      setCategories(res.data.data);
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  };
+
+  const fetchPublicProfile = async () => {
+    try {
+      const res = await authAPI.getProfile();
+      setPublicProfile(res.data.data);
+    } catch (error) {
+      console.error('Failed to fetch public profile:', error);
+    }
+  };
 
   const checkAuth = async () => {
     const token = localStorage.getItem('token');
@@ -69,6 +91,10 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateProfile,
         checkAuth,
+        publicProfile,
+        fetchPublicProfile,
+        categories,
+        fetchCategories,
       }}
     >
       {children}
@@ -84,4 +110,4 @@ export const useAuth = () => {
   return context;
 };
 
-export default AuthContext;
+export default AuthProvider;

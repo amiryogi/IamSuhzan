@@ -96,7 +96,7 @@ const Achievements = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
           className="text-center mb-12"
         >
           <span className="text-primary text-sm font-medium uppercase tracking-wider">
@@ -118,7 +118,7 @@ const Achievements = () => {
               key={index}
               initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="relative flex gap-6 pb-8 last:pb-0"
             >
