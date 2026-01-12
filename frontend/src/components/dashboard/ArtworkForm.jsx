@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { HiArrowLeft, HiSave, HiTrash, HiPlus } from 'react-icons/hi';
-import toast from 'react-hot-toast';
-import { artworksAPI, categoriesAPI } from '../../services/api';
-import MediaUploader from './MediaUploader';
-import LoadingSpinner from '../common/LoadingSpinner';
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { HiArrowLeft, HiSave, HiTrash, HiPlus } from "react-icons/hi";
+import toast from "react-hot-toast";
+import { artworksAPI, categoriesAPI } from "../../services/api";
+import MediaUploader from "./MediaUploader";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 const ArtworkForm = () => {
   const { id } = useParams();
@@ -16,22 +16,22 @@ const ArtworkForm = () => {
   const [saving, setSaving] = useState(false);
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    medium: 'oil',
-    surface: 'canvas',
-    dimensions: { width: '', height: '', unit: 'inches' },
+    title: "",
+    description: "",
+    medium: "oil",
+    surface: "canvas",
+    dimensions: { width: "", height: "", unit: "inches" },
     year: new Date().getFullYear(),
-    price: '',
-    currency: 'USD',
+    price: "",
+    currency: "USD",
     isForSale: false,
     isSold: false,
-    category: '',
-    tags: '',
+    category: "",
+    tags: "",
     media: [],
     featured: false,
-    status: 'published',
-    competition: { name: '', year: '', award: '', position: '' },
+    status: "published",
+    competition: { name: "", year: "", award: "", position: "" },
     features: [],
   });
 
@@ -45,7 +45,7 @@ const ArtworkForm = () => {
       const res = await categoriesAPI.getAll();
       setCategories(res.data.data);
     } catch (error) {
-      console.error('Failed to fetch categories:', error);
+      console.error("Failed to fetch categories:", error);
     }
   };
 
@@ -55,15 +55,24 @@ const ArtworkForm = () => {
       const artwork = res.data.data;
       setFormData({
         ...artwork,
-        tags: artwork.tags?.join(', ') || '',
-        category: artwork.category?._id || '',
-        dimensions: artwork.dimensions || { width: '', height: '', unit: 'inches' },
+        tags: artwork.tags?.join(", ") || "",
+        category: artwork.category?._id || "",
+        dimensions: artwork.dimensions || {
+          width: "",
+          height: "",
+          unit: "inches",
+        },
         features: artwork.features || [],
-        competition: artwork.competition || { name: '', year: '', award: '', position: '' },
+        competition: artwork.competition || {
+          name: "",
+          year: "",
+          award: "",
+          position: "",
+        },
       });
     } catch (error) {
-      toast.error('Failed to load artwork');
-      navigate('/dashboard/artworks');
+      toast.error("Failed to load artwork");
+      navigate("/dashboard/artworks");
     } finally {
       setLoading(false);
     }
@@ -71,9 +80,9 @@ const ArtworkForm = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
+
+    if (name.includes(".")) {
+      const [parent, child] = name.split(".");
       setFormData((prev) => ({
         ...prev,
         [parent]: { ...prev[parent], [child]: value },
@@ -81,7 +90,7 @@ const ArtworkForm = () => {
     } else {
       setFormData((prev) => ({
         ...prev,
-        [name]: type === 'checkbox' ? checked : value,
+        [name]: type === "checkbox" ? checked : value,
       }));
     }
   };
@@ -99,11 +108,11 @@ const ArtworkForm = () => {
       media: prev.media.filter((_, i) => i !== index),
     }));
   };
-// Feature management functions
+  // Feature management functions
   const addFeature = () => {
     setFormData((prev) => ({
       ...prev,
-      features: [...prev.features, { title: '', description: '' }],
+      features: [...prev.features, { title: "", description: "" }],
     }));
   };
 
@@ -123,7 +132,6 @@ const ArtworkForm = () => {
     }));
   };
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -131,7 +139,10 @@ const ArtworkForm = () => {
     try {
       const payload = {
         ...formData,
-        tags: formData.tags.split(',').map((t) => t.trim()).filter(Boolean),
+        tags: formData.tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
         category: formData.category || undefined,
         price: formData.price ? Number(formData.price) : undefined,
         dimensions: {
@@ -143,14 +154,14 @@ const ArtworkForm = () => {
 
       if (isEdit) {
         await artworksAPI.update(id, payload);
-        toast.success('Artwork updated successfully');
+        toast.success("Artwork updated successfully");
       } else {
         await artworksAPI.create(payload);
-        toast.success('Artwork created successfully');
+        toast.success("Artwork created successfully");
       }
-      navigate('/dashboard/artworks');
+      navigate("/dashboard/artworks");
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to save artwork');
+      toast.error(error.response?.data?.message || "Failed to save artwork");
     } finally {
       setSaving(false);
     }
@@ -163,17 +174,17 @@ const ArtworkForm = () => {
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <button
-          onClick={() => navigate('/dashboard/artworks')}
+          onClick={() => navigate("/dashboard/artworks")}
           className="p-2 rounded-lg bg-dark-200 text-light-300 hover:bg-dark-300 transition-colors"
         >
           <HiArrowLeft size={20} />
         </button>
         <div>
           <h1 className="text-2xl font-display font-semibold text-light">
-            {isEdit ? 'Edit Artwork' : 'Add New Artwork'}
+            {isEdit ? "Edit Artwork" : "Add New Artwork"}
           </h1>
           <p className="text-dark-400 text-sm">
-            {isEdit ? 'Update artwork details' : 'Create a new portfolio piece'}
+            {isEdit ? "Update artwork details" : "Create a new portfolio piece"}
           </p>
         </div>
       </div>
@@ -182,16 +193,26 @@ const ArtworkForm = () => {
         {/* Media Section */}
         <section className="bg-dark-100 rounded-xl p-6">
           <h2 className="text-lg font-medium text-light mb-4">Media</h2>
-          
+
           {/* Existing Media */}
           {formData.media.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               {formData.media.map((item, index) => (
-                <div key={index} className="relative aspect-square rounded-xl overflow-hidden">
-                  {item.type === 'video' ? (
-                    <video src={item.url} className="w-full h-full object-cover" />
+                <div
+                  key={index}
+                  className="relative aspect-square rounded-xl overflow-hidden"
+                >
+                  {item.type === "video" ? (
+                    <video
+                      src={item.url}
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
-                    <img src={item.thumbnailUrl || item.url} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={item.thumbnailUrl || item.url}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   )}
                   <button
                     type="button"
@@ -211,10 +232,14 @@ const ArtworkForm = () => {
 
         {/* Basic Info */}
         <section className="bg-dark-100 rounded-xl p-6">
-          <h2 className="text-lg font-medium text-light mb-4">Basic Information</h2>
+          <h2 className="text-lg font-medium text-light mb-4">
+            Basic Information
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
-              <label className="block text-sm text-light-300 mb-2">Title *</label>
+              <label className="block text-sm text-light-300 mb-2">
+                Title *
+              </label>
               <input
                 type="text"
                 name="title"
@@ -227,7 +252,9 @@ const ArtworkForm = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm text-light-300 mb-2">Description</label>
+              <label className="block text-sm text-light-300 mb-2">
+                Description
+              </label>
               <textarea
                 name="description"
                 value={formData.description}
@@ -239,8 +266,15 @@ const ArtworkForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm text-light-300 mb-2">Medium</label>
-              <select name="medium" value={formData.medium} onChange={handleChange} className="input">
+              <label className="block text-sm text-light-300 mb-2">
+                Medium
+              </label>
+              <select
+                name="medium"
+                value={formData.medium}
+                onChange={handleChange}
+                className="input"
+              >
                 <option value="oil">Oil</option>
                 <option value="acrylic">Acrylic</option>
                 <option value="watercolor">Watercolor</option>
@@ -254,8 +288,15 @@ const ArtworkForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm text-light-300 mb-2">Surface</label>
-              <select name="surface" value={formData.surface} onChange={handleChange} className="input">
+              <label className="block text-sm text-light-300 mb-2">
+                Surface
+              </label>
+              <select
+                name="surface"
+                value={formData.surface}
+                onChange={handleChange}
+                className="input"
+              >
                 <option value="canvas">Canvas</option>
                 <option value="paper">Paper</option>
                 <option value="wood">Wood</option>
@@ -279,11 +320,20 @@ const ArtworkForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm text-light-300 mb-2">Category</label>
-              <select name="category" value={formData.category} onChange={handleChange} className="input">
+              <label className="block text-sm text-light-300 mb-2">
+                Category
+              </label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="input"
+              >
                 <option value="">Select category</option>
                 {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>{cat.name}</option>
+                  <option key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -292,7 +342,9 @@ const ArtworkForm = () => {
 
         {/* Dimensions & Pricing */}
         <section className="bg-dark-100 rounded-xl p-6">
-          <h2 className="text-lg font-medium text-light mb-4">Dimensions & Pricing</h2>
+          <h2 className="text-lg font-medium text-light mb-4">
+            Dimensions & Pricing
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div>
               <label className="block text-sm text-light-300 mb-2">Width</label>
@@ -306,7 +358,9 @@ const ArtworkForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm text-light-300 mb-2">Height</label>
+              <label className="block text-sm text-light-300 mb-2">
+                Height
+              </label>
               <input
                 type="number"
                 name="dimensions.height"
@@ -318,7 +372,12 @@ const ArtworkForm = () => {
             </div>
             <div>
               <label className="block text-sm text-light-300 mb-2">Unit</label>
-              <select name="dimensions.unit" value={formData.dimensions.unit} onChange={handleChange} className="input">
+              <select
+                name="dimensions.unit"
+                value={formData.dimensions.unit}
+                onChange={handleChange}
+                className="input"
+              >
                 <option value="inches">Inches</option>
                 <option value="cm">Centimeters</option>
                 <option value="pixels">Pixels</option>
@@ -358,13 +417,17 @@ const ArtworkForm = () => {
               />
               <span className="text-light-300">Sold</span>
             </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-            Features */}
+          </div>
+        </section>
+
+        {/* Features */}
         <section className="bg-dark-100 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-lg font-medium text-light">Features</h2>
-              <p className="text-sm text-dark-400">Highlight key aspects of this artwork</p>
+              <p className="text-sm text-dark-400">
+                Highlight key aspects of this artwork
+              </p>
             </div>
             <button
               type="button"
@@ -377,7 +440,8 @@ const ArtworkForm = () => {
 
           {formData.features.length === 0 ? (
             <p className="text-dark-400 text-sm py-4 text-center">
-              No features added yet. Click "Add Feature" to highlight key aspects.
+              No features added yet. Click "Add Feature" to highlight key
+              aspects.
             </p>
           ) : (
             <div className="space-y-4">
@@ -388,14 +452,18 @@ const ArtworkForm = () => {
                       <input
                         type="text"
                         value={feature.title}
-                        onChange={(e) => updateFeature(index, 'title', e.target.value)}
+                        onChange={(e) =>
+                          updateFeature(index, "title", e.target.value)
+                        }
                         className="input"
                         placeholder="Feature title (e.g., Hand-painted details)"
                         maxLength={100}
                       />
                       <textarea
                         value={feature.description}
-                        onChange={(e) => updateFeature(index, 'description', e.target.value)}
+                        onChange={(e) =>
+                          updateFeature(index, "description", e.target.value)
+                        }
                         className="input resize-none"
                         rows={2}
                         placeholder="Brief description (optional)"
@@ -433,7 +501,7 @@ const ArtworkForm = () => {
         <div className="flex justify-end gap-4">
           <button
             type="button"
-            onClick={() => navigate('/dashboard/artworks')}
+            onClick={() => navigate("/dashboard/artworks")}
             className="btn btn-ghost"
           >
             Cancel
@@ -445,7 +513,13 @@ const ArtworkForm = () => {
             whileTap={{ scale: 0.98 }}
             className="btn btn-primary gap-2 disabled:opacity-50"
           >
-            {saving ? 'Saving...' : <><HiSave /> Save Artwork</>}
+            {saving ? (
+              "Saving..."
+            ) : (
+              <>
+                <HiSave /> Save Artwork
+              </>
+            )}
           </motion.button>
         </div>
       </form>
