@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { HiArrowLeft, HiSave, HiTrash } from "react-icons/hi";
+import toast from "react-hot-toast";
 import { heroSlidesAPI, uploadAPI } from "../../services/api";
 import MediaUploader from "./MediaUploader";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -95,12 +96,16 @@ const HeroSlideForm = () => {
     try {
       if (isEditMode) {
         await heroSlidesAPI.update(id, formData);
+        toast.success("Hero slide updated successfully");
       } else {
         await heroSlidesAPI.create(formData);
+        toast.success("Hero slide created successfully");
       }
       navigate("/dashboard/hero-slides");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to save slide");
+      const errorMsg = err.response?.data?.message || "Failed to save slide";
+      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
