@@ -416,18 +416,6 @@ const ArtworkForm = () => {
           )}
         </section>
 
-        {/*   <input
-                type="checkbox"
-                name="featured"
-                checked={formData.featured}
-                onChange={handleChange}
-                className="w-5 h-5 rounded border-dark-300 text-primary focus:ring-primary"
-              />
-              <span className="text-light-300">Featured artwork</span>
-            </label>
-          </div>
-        </section>
-
         {/* Tags */}
         <section className="bg-dark-100 rounded-xl p-6">
           <h2 className="text-lg font-medium text-light mb-4">Tags</h2>
