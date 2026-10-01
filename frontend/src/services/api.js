@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "/api";
+// Accept VITE_API_URL with or without a trailing "/api" (or "/"):
+// every backend route is mounted under /api
+const API_URL = (() => {
+  const raw = (import.meta.env.VITE_API_URL || "/api").replace(/\/+$/, "");
+  return raw.endsWith("/api") ? raw : `${raw}/api`;
+})();
 
 // Dashboard lists pass this so the API also returns drafts and hidden items
 export const ADMIN_LIST = { includeHidden: true };
