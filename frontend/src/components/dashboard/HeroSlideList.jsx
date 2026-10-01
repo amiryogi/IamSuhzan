@@ -9,7 +9,7 @@ import {
   HiEyeOff,
   HiMenuAlt4,
 } from "react-icons/hi";
-import { heroSlidesAPI } from "../../services/api";
+import { heroSlidesAPI, ADMIN_LIST } from "../../services/api";
 import LoadingSpinner from "../common/LoadingSpinner";
 
 const HeroSlideList = () => {
@@ -25,7 +25,7 @@ const HeroSlideList = () => {
   const fetchSlides = async () => {
     try {
       setLoading(true);
-      const response = await heroSlidesAPI.getAll();
+      const response = await heroSlidesAPI.getAll(ADMIN_LIST);
       setSlides(response.data.data);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch slides");

@@ -1,5 +1,6 @@
 const Photography = require("../models/Photography");
 const cloudinary = require("../config/cloudinary");
+const { wantsHidden } = require("../middleware/auth");
 
 // @desc    Get all photography works
 // @route   GET /api/photography
@@ -11,11 +12,11 @@ exports.getAllPhotography = async (req, res, next) => {
 
     // Filter by category if provided
     if (category) {
-      query.category = category;
+      query.category = String(category);
     }
 
-    // If not authenticated, only return active items
-    if (!req.user) {
+    // Hidden items are only listed for the admin dashboard
+    if (!wantsHidden(req)) {
       query.isActive = true;
     } else if (active !== undefined) {
       query.isActive = active === "true";
@@ -178,7 +179,7 @@ exports.getCategories = async (req, res, next) => {
   try {
     const categories = await Photography.distinct("category", {
       isActive: true,
-      category: { $ne: null, $ne: "" },
+      category: { $nin: [null, ""] },
     });
 
     res.status(200).json({

@@ -53,3 +53,22 @@ exports.authorize = (...roles) => {
     next();
   };
 };
+
+// Attach req.user when a valid token is present, but never reject the request.
+// Used on public routes that show extra data (drafts, hidden items) to the admin.
+exports.optionalAuth = async (req, res, next) => {
+  const header = req.headers.authorization;
+  if (!header || !header.startsWith('Bearer')) return next();
+
+  try {
+    const decoded = jwt.verify(header.split(' ')[1], process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.id);
+  } catch (err) {
+    // Invalid or expired token: treat as a public visitor
+  }
+  next();
+};
+
+// True when an admin explicitly asked for hidden/draft items (dashboard lists)
+exports.wantsHidden = (req) =>
+  req.user?.role === 'admin' && req.query.includeHidden === 'true';

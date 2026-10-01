@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiMail, HiPhone, HiLocationMarker, HiPaperAirplane, HiGlobeAlt } from 'react-icons/hi';
 import { FaInstagram, FaFacebookF, FaTwitter, FaYoutube } from 'react-icons/fa';
@@ -13,11 +14,21 @@ const Contact = () => {
   const profile = publicProfile;
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
+  const [searchParams] = useSearchParams();
+  // Enquiry links from an artwork arrive as ?subject=purchase&enquire=<title>
+  const [formData, setFormData] = useState(() => {
+    const subjects = ['commission', 'purchase', 'collaboration', 'exhibition', 'general'];
+    const subject = searchParams.get('subject');
+    const artwork = searchParams.get('enquire');
+    return {
+      name: '',
+      email: '',
+      subject: subjects.includes(subject) ? subject : '',
+      message: artwork ? `Hi Sujan, I'm interested in your artwork "${artwork}".
+
+` : '',
+      website: '', // honeypot, hidden from real visitors
+    };
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,7 +43,7 @@ const Contact = () => {
     try {
       await messagesAPI.send(formData);
       toast.success('Message sent successfully! I\'ll get back to you soon.');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      setFormData({ name: '', email: '', subject: '', message: '', website: '' });
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to send message. Please try again.');
     } finally {
@@ -149,10 +160,25 @@ const Contact = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <form onSubmit={handleSubmit} className="bg-dark-100 rounded-2xl p-8">
+              {/* Honeypot: hidden from people, filled in by spam bots */}
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="contact-website">Website</label>
+                <input
+                  id="contact-website"
+                  type="text"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <label className="block text-sm text-light-300 mb-2">Your Name</label>
+                  <label htmlFor="contact-name" className="block text-sm text-light-300 mb-2">Your Name</label>
                   <input
+                    id="contact-name"
+                    autoComplete="name"
                     type="text"
                     name="name"
                     value={formData.name}
@@ -163,8 +189,10 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-light-300 mb-2">Email Address</label>
+                  <label htmlFor="contact-email" className="block text-sm text-light-300 mb-2">Email Address</label>
                   <input
+                    id="contact-email"
+                    autoComplete="email"
                     type="email"
                     name="email"
                     value={formData.email}
@@ -177,8 +205,9 @@ const Contact = () => {
               </div>
 
               <div className="mb-6">
-                <label className="block text-sm text-light-300 mb-2">Subject</label>
+                <label htmlFor="contact-subject" className="block text-sm text-light-300 mb-2">Subject</label>
                 <select
+                  id="contact-subject"
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
@@ -195,8 +224,9 @@ const Contact = () => {
               </div>
 
               <div className="mb-6">
-                <label className="block text-sm text-light-300 mb-2">Message</label>
+                <label htmlFor="contact-message" className="block text-sm text-light-300 mb-2">Message</label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}

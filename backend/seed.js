@@ -98,6 +98,12 @@ const demoPhotography = [
 
 const seedAdmin = async () => {
   try {
+    // Never fall back to a well-known default password
+    if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+      console.error("Set ADMIN_EMAIL and ADMIN_PASSWORD in .env before seeding");
+      process.exit(1);
+    }
+
     // Check if admin exists
     const adminExists = await User.findOne({ email: process.env.ADMIN_EMAIL });
 
@@ -107,8 +113,8 @@ const seedAdmin = async () => {
       // Create admin user
       const admin = await User.create({
         name: "Admin",
-        email: process.env.ADMIN_EMAIL || "admin@artportfolio.com",
-        password: process.env.ADMIN_PASSWORD || "Admin@123",
+        email: process.env.ADMIN_EMAIL,
+        password: process.env.ADMIN_PASSWORD,
         role: "admin",
         bio: "Fine Art Artist specializing in Portrait Painting",
         artistStatement:

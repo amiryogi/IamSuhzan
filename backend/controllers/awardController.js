@@ -1,5 +1,6 @@
 const Award = require("../models/Award");
 const cloudinary = require("../config/cloudinary");
+const { wantsHidden } = require("../middleware/auth");
 
 // @desc    Get all awards (active only for public, all for admin)
 // @route   GET /api/awards
@@ -8,8 +9,8 @@ exports.getAwards = async (req, res, next) => {
   try {
     let query = {};
 
-    // If not authenticated, only return active awards
-    if (!req.user) {
+    // Inactive awards are only listed for the admin dashboard
+    if (!wantsHidden(req)) {
       query.isActive = true;
     }
 

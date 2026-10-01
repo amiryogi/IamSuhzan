@@ -49,9 +49,7 @@ const Dashboard = () => {
                 Upload Media
               </h1>
               <div className="bg-dark-100 rounded-xl p-6">
-                <MediaUploader
-                  onUploadComplete={(media) => console.log("Uploaded:", media)}
-                />
+                <MediaUploader onUploadComplete={() => {}} />
               </div>
             </div>
           }

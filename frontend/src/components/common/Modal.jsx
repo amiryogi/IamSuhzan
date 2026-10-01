@@ -22,6 +22,14 @@ const Modal = ({ isOpen, onClose, children, size = 'md' }) => {
     };
   }, [isOpen]);
 
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -41,12 +49,15 @@ const Modal = ({ isOpen, onClose, children, size = 'md' }) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
+            role="dialog"
+            aria-modal="true"
             className={`${sizeClasses[size]} w-full bg-dark-100 rounded-2xl 
                        shadow-2xl relative z-10 max-h-[90vh] overflow-hidden`}
           >
             {/* Close Button */}
             <button
               onClick={onClose}
+              aria-label="Close"
               className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full 
                        bg-dark-200 flex items-center justify-center
                        text-light-300 hover:bg-dark-300 hover:text-light 

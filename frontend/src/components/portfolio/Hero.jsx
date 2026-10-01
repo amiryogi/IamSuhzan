@@ -10,6 +10,7 @@ import { HiArrowRight, HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { heroSlidesAPI } from "../../services/api";
 import heroImage from "../../assets/heroimage.jpeg";
 import BrushStroke from "../common/BrushStroke";
+import { optimizedImage } from "../../utils/media";
 
 const Hero = () => {
   const { scrollY } = useScroll();
@@ -63,7 +64,9 @@ const Hero = () => {
 
   // Get current background image
   const currentImage =
-    slides.length > 0 ? slides[currentSlide]?.imageUrl : heroImage;
+    slides.length > 0
+      ? optimizedImage(slides[currentSlide]?.imageUrl, 1920)
+      : heroImage;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

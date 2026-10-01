@@ -1,15 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ArtworkCard from './ArtworkCard';
 import ArtworkDetail from './ArtworkDetail';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { useArtworks } from '../../hooks/useArtworks';
 import { useAuth } from '../../context/AuthContext';
+import { artworksAPI } from '../../services/api';
 
 const Gallery = ({ featured = false, limit = 12, showFilters = true }) => {
   const { categories: globalCategories } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  // True when the open artwork was pushed onto history by this page
+  const openedHere = useRef(false);
   const [selectedArtwork, setSelectedArtwork] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
+  const openSlug = searchParams.get('artwork');
 
   const displayCategories = [
     { id: 'all', name: 'All Works' },
@@ -23,6 +30,64 @@ const Gallery = ({ featured = false, limit = 12, showFilters = true }) => {
     featured ? { featured: true, limit } : { limit }
   );
 
+
+  // The open artwork lives in the URL (?artwork=<slug>) so it can be shared
+  // and the browser back button closes it
+  useEffect(() => {
+    if (!openSlug) {
+      openedHere.current = false;
+      setSelectedArtwork(null);
+      return;
+    }
+    if (selectedArtwork?.slug === openSlug) return;
+
+    const loaded = artworks.find((art) => art.slug === openSlug);
+    if (loaded) {
+      setSelectedArtwork(loaded);
+      return;
+    }
+
+    let cancelled = false;
+    artworksAPI
+      .getBySlug(openSlug)
+      .then((res) => !cancelled && setSelectedArtwork(res.data.data))
+      .catch(() => !cancelled && closeArtwork());
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openSlug, artworks]);
+
+  // Show the artwork's title in the browser tab while it is open
+  useEffect(() => {
+    if (!selectedArtwork) return;
+    const previous = document.title;
+    document.title = `${selectedArtwork.title} | Sujan Budhathoki`;
+    return () => {
+      document.title = previous;
+    };
+  }, [selectedArtwork]);
+
+  const openArtwork = (artwork) => {
+    setSelectedArtwork(artwork);
+    openedHere.current = true;
+    const next = new URLSearchParams(searchParams);
+    next.set('artwork', artwork.slug);
+    setSearchParams(next, { preventScrollReset: true });
+  };
+
+  const closeArtwork = () => {
+    setSelectedArtwork(null);
+    if (openedHere.current) {
+      // Step back so the browser Back button doesn't reopen it
+      openedHere.current = false;
+      navigate(-1);
+      return;
+    }
+    const next = new URLSearchParams(searchParams);
+    next.delete('artwork');
+    setSearchParams(next, { replace: true, preventScrollReset: true });
+  };
 
   const filteredArtworks =
     activeCategory === 'all'
@@ -105,7 +170,7 @@ const Gallery = ({ featured = false, limit = 12, showFilters = true }) => {
                 key={artwork._id}
                 artwork={artwork}
                 index={index}
-                onClick={() => setSelectedArtwork(artwork)}
+                onClick={() => openArtwork(artwork)}
               />
             ))}
           </motion.div>
@@ -113,10 +178,12 @@ const Gallery = ({ featured = false, limit = 12, showFilters = true }) => {
       </div>
 
       {/* Artwork Detail Modal */}
+      {/* Keyed so each artwork opens on its first image */}
       <ArtworkDetail
+        key={selectedArtwork?._id}
         artwork={selectedArtwork}
         isOpen={!!selectedArtwork}
-        onClose={() => setSelectedArtwork(null)}
+        onClose={closeArtwork}
       />
     </section>
   );

@@ -2,6 +2,9 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "/api";
 
+// Dashboard lists pass this so the API also returns drafts and hidden items
+export const ADMIN_LIST = { includeHidden: true };
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -27,7 +30,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Only an expired admin session should bounce to the login page;
+    // public visitors must never be redirected
+    if (
+      error.response?.status === 401 &&
+      window.location.pathname.startsWith("/dashboard")
+    ) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       window.location.href = "/login";
@@ -43,6 +51,7 @@ export const authAPI = {
   getMe: () => api.get("/auth/me"),
   getProfile: () => api.get("/auth/profile"),
   updateProfile: (data) => api.put("/auth/profile", data),
+  updatePassword: (data) => api.put("/auth/password", data),
   logout: () => api.get("/auth/logout"),
 };
 
@@ -107,7 +116,7 @@ export const uploadAPI = {
 
 // Hero Slides API
 export const heroSlidesAPI = {
-  getAll: () => api.get("/hero-slides"),
+  getAll: (params) => api.get("/hero-slides", { params }),
   getById: (id) => api.get(`/hero-slides/${id}`),
   create: (data) => api.post("/hero-slides", data),
   update: (id, data) => api.put(`/hero-slides/${id}`, data),
@@ -117,7 +126,7 @@ export const heroSlidesAPI = {
 
 // Awards API
 export const awardsAPI = {
-  getAll: () => api.get("/awards"),
+  getAll: (params) => api.get("/awards", { params }),
   getById: (id) => api.get(`/awards/${id}`),
   create: (data) => api.post("/awards", data),
   update: (id, data) => api.put(`/awards/${id}`, data),

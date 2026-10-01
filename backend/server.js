@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const helmet = require("helmet");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
 
@@ -12,14 +13,22 @@ connectDB();
 
 const app = express();
 
-// Body parser
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+// Render/Vercel sit behind one proxy; needed for correct client IPs in rate limiting
+app.set("trust proxy", 1);
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
+// Security headers (API only serves JSON, so cross-origin resources are fine)
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+
+// Body parser (file uploads go through multer, so JSON bodies stay small)
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+
+if (process.env.NODE_ENV !== "production") {
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+  });
+}
 
 // Enable CORS
 const allowedOrigins = [

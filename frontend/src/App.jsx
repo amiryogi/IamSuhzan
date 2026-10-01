@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -19,9 +20,12 @@ import PhotographyPage from "./pages/PhotographyPage";
 import AboutPage from "./pages/AboutPage";
 import ServicesPage from "./pages/ServicesPage";
 import ContactPage from "./pages/ContactPage";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
 import ScrollToTop from "./components/common/ScrollToTop";
+import LoadingSpinner from "./components/common/LoadingSpinner";
+
+// Admin-only screens are split out so public visitors never download them
+const Login = lazy(() => import("./pages/Login"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 // Layout wrapper for public pages
 const PublicLayout = ({ children }) => {
@@ -94,10 +98,24 @@ const AnimatedRoutes = () => {
         />
 
         {/* Auth Routes */}
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={
+            <Suspense fallback={<LoadingSpinner fullScreen />}>
+              <Login />
+            </Suspense>
+          }
+        />
 
         {/* Dashboard Routes */}
-        <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route
+          path="/dashboard/*"
+          element={
+            <Suspense fallback={<LoadingSpinner fullScreen />}>
+              <Dashboard />
+            </Suspense>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );

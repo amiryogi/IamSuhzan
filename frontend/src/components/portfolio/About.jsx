@@ -30,6 +30,7 @@ const About = () => {
               <img
                 src={profile?.avatar || profileImage}
                 alt={profile?.name || "Sujan Budhathoki - Visual Artist"}
+                loading="lazy"
                 className="w-full h-full object-cover object-top"
               />
             </div>

@@ -39,6 +39,8 @@ JWT_SECRET=your_secret_key
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
+ADMIN_EMAIL=you@example.com
+ADMIN_PASSWORD=choose_a_strong_password
 ```
 
 ### 3. Seed Database
@@ -48,7 +50,9 @@ cd backend
 npm run seed
 ```
 
-This creates an admin user and default categories.
+This creates the admin user from `ADMIN_EMAIL` / `ADMIN_PASSWORD` and default categories. The seed refuses to run without both set.
+
+Alternatively, on an empty database the first `POST /api/auth/register` creates the admin account; registration is closed as soon as any user exists.
 
 ### 4. Run Development Servers
 
@@ -70,10 +74,9 @@ npm run dev
 - **Admin Login**: http://localhost:5173/login
 - **Dashboard**: http://localhost:5173/dashboard
 
-## Default Admin Credentials
+## Admin Access
 
-- **Email**: admin@artportfolio.com
-- **Password**: Admin@123
+Only users with the `admin` role can change content, read messages or upload media. Change the password any time from **Dashboard → Settings**.
 
 ## Features
 
@@ -83,14 +86,18 @@ npm run dev
 - 👤 About section with stats
 - 🏆 Achievements timeline
 - 📚 Services & pricing cards
-- 📧 Contact form
+- 🔍 Fullscreen lightbox with zoom, swipe and keyboard navigation
+- 🔗 Shareable artwork links (`/gallery?artwork=<slug>`)
+- 💬 Enquire / commission buttons that pre-fill the contact form
+- 📧 Contact form with spam protection (honeypot + rate limit)
 
 ### Admin Dashboard
 - 📊 Stats overview
 - 🎨 Artwork CRUD operations
 - 📤 Media upload (images & videos)
 - 🏷️ Category management
-- 🔐 JWT authentication
+- 🔐 JWT authentication (admin role required, rate-limited login, password change)
+- 👁️ Drafts and hidden items stay visible in the dashboard
 
 ## Project Structure
 
@@ -118,8 +125,9 @@ IamSuhzan/
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | /api/auth/login | Login |
-| GET | /api/artworks | Get all artworks |
+| POST | /api/auth/login | Login (rate-limited) |
+| PUT | /api/auth/password | Change password |
+| GET | /api/artworks | Get published artworks (`?includeHidden=true` adds drafts for admins) |
 | POST | /api/artworks | Create artwork |
 | PUT | /api/artworks/:id | Update artwork |
 | DELETE | /api/artworks/:id | Delete artwork |

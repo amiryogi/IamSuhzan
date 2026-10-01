@@ -1,5 +1,35 @@
 const Artwork = require('../models/Artwork');
 const cloudinary = require('../config/cloudinary');
+const { wantsHidden } = require('../middleware/auth');
+
+const isAdmin = (req) => req.user?.role === 'admin';
+
+// Fields managed by the server that must never be set from a request body
+const stripServerFields = (body) => {
+  const { _id, slug, views, createdAt, updatedAt, ...rest } = body;
+  return rest;
+};
+
+// Shared by the id and slug lookups: hide drafts from the public
+// and only count views from visitors
+const sendArtwork = async (artwork, req, res) => {
+  if (!artwork || (artwork.status !== 'published' && !isAdmin(req))) {
+    return res.status(404).json({
+      success: false,
+      message: 'Artwork not found',
+    });
+  }
+
+  if (!isAdmin(req)) {
+    await Artwork.updateOne({ _id: artwork._id }, { $inc: { views: 1 } });
+    artwork.views += 1;
+  }
+
+  res.status(200).json({
+    success: true,
+    data: artwork,
+  });
+};
 
 // @desc    Get all artworks
 // @route   GET /api/artworks
@@ -8,33 +38,44 @@ exports.getArtworks = async (req, res, next) => {
   try {
     let query;
 
-    // Copy req.query
-    const reqQuery = { ...req.query };
+    // Only these fields may be filtered on from the query string
+    const filterFields = ['category', 'medium', 'surface', 'featured', 'isForSale', 'isSold', 'year', 'price'];
+    const operators = ['gt', 'gte', 'lt', 'lte', 'in'];
+    const filter = {};
 
-    // Fields to exclude from filtering
-    const removeFields = ['select', 'sort', 'page', 'limit', 'search'];
-    removeFields.forEach((param) => delete reqQuery[param]);
+    filterFields.forEach((field) => {
+      const value = req.query[field];
+      if (value === undefined) return;
 
-    // Only show published artworks for public access
-    if (!req.user) {
-      reqQuery.status = 'published';
+      if (value !== null && typeof value === 'object') {
+        // e.g. ?price[gte]=100 -> { price: { $gte: '100' } }
+        const ops = {};
+        Object.keys(value)
+          .filter((op) => operators.includes(op))
+          .forEach((op) => {
+            ops[`$${op}`] = op === 'in' ? String(value[op]).split(',') : String(value[op]);
+          });
+        if (Object.keys(ops).length) filter[field] = ops;
+      } else {
+        filter[field] = String(value);
+      }
+    });
+
+    // Drafts are only listed for the admin dashboard
+    if (wantsHidden(req)) {
+      if (['draft', 'published'].includes(req.query.status)) {
+        filter.status = req.query.status;
+      }
+    } else {
+      filter.status = 'published';
     }
 
-    // Create query string
-    let queryStr = JSON.stringify(reqQuery);
-
-    // Create operators ($gt, $gte, etc)
-    queryStr = queryStr.replace(
-      /\b(gt|gte|lt|lte|in)\b/g,
-      (match) => `$${match}`
-    );
-
     // Finding resource
-    query = Artwork.find(JSON.parse(queryStr)).populate('category', 'name slug');
+    query = Artwork.find(filter).populate('category', 'name slug');
 
     // Search functionality
     if (req.query.search) {
-      query = query.find({ $text: { $search: req.query.search } });
+      query = query.find({ $text: { $search: String(req.query.search) } });
     }
 
     // Select Fields
@@ -53,10 +94,12 @@ exports.getArtworks = async (req, res, next) => {
 
     // Pagination
     const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 12;
+    const limit = Math.min(parseInt(req.query.limit, 10) || 12, 100);
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
-    const total = await Artwork.countDocuments(JSON.parse(queryStr));
+    const total = await Artwork.countDocuments(
+      req.query.search ? { ...filter, $text: { $search: String(req.query.search) } } : filter
+    );
 
     query = query.skip(startIndex).limit(limit);
 
@@ -127,21 +170,7 @@ exports.getArtwork = async (req, res, next) => {
       'name slug'
     );
 
-    if (!artwork) {
-      return res.status(404).json({
-        success: false,
-        message: 'Artwork not found',
-      });
-    }
-
-    // Increment views
-    artwork.views += 1;
-    await artwork.save();
-
-    res.status(200).json({
-      success: true,
-      data: artwork,
-    });
+    await sendArtwork(artwork, req, res);
   } catch (err) {
     next(err);
   }
@@ -157,21 +186,7 @@ exports.getArtworkBySlug = async (req, res, next) => {
       'name slug'
     );
 
-    if (!artwork) {
-      return res.status(404).json({
-        success: false,
-        message: 'Artwork not found',
-      });
-    }
-
-    // Increment views
-    artwork.views += 1;
-    await artwork.save();
-
-    res.status(200).json({
-      success: true,
-      data: artwork,
-    });
+    await sendArtwork(artwork, req, res);
   } catch (err) {
     next(err);
   }
@@ -182,7 +197,7 @@ exports.getArtworkBySlug = async (req, res, next) => {
 // @access  Private
 exports.createArtwork = async (req, res, next) => {
   try {
-    const artwork = await Artwork.create(req.body);
+    const artwork = await Artwork.create(stripServerFields(req.body));
 
     res.status(201).json({
       success: true,
@@ -207,7 +222,7 @@ exports.updateArtwork = async (req, res, next) => {
       });
     }
 
-    artwork = await Artwork.findByIdAndUpdate(req.params.id, req.body, {
+    artwork = await Artwork.findByIdAndUpdate(req.params.id, stripServerFields(req.body), {
       new: true,
       runValidators: true,
     });

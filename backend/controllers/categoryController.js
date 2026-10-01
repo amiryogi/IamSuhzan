@@ -137,7 +137,11 @@ exports.deleteCategory = async (req, res, next) => {
 
     // Delete cover image from cloudinary if exists
     if (category.coverImage && category.coverImage.publicId) {
-      await cloudinary.uploader.destroy(category.coverImage.publicId);
+      try {
+        await cloudinary.uploader.destroy(category.coverImage.publicId);
+      } catch (cloudinaryErr) {
+        console.error("Failed to delete image from Cloudinary:", cloudinaryErr);
+      }
     }
 
     await category.deleteOne();

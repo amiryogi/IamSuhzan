@@ -1,17 +1,26 @@
 const User = require('../models/User');
 
-// @desc    Register user
+// @desc    Register the first (admin) user
 // @route   POST /api/auth/register
-// @access  Public (should be restricted in production)
+// @access  Public only while no users exist; closed afterwards
 exports.register = async (req, res, next) => {
   try {
+    const userCount = await User.estimatedDocumentCount();
+
+    if (userCount > 0) {
+      return res.status(403).json({
+        success: false,
+        message: 'Registration is closed',
+      });
+    }
+
     const { name, email, password } = req.body;
 
-    // Create user
     const user = await User.create({
       name,
       email,
       password,
+      role: 'admin',
     });
 
     sendTokenResponse(user, 201, res);
@@ -82,7 +91,10 @@ exports.getMe = async (req, res, next) => {
 // @access  Public
 exports.getProfile = async (req, res, next) => {
   try {
-    const user = await User.findOne({ role: 'admin' });
+    // Oldest admin is the artist; only expose public fields
+    const user = await User.findOne({ role: 'admin' })
+      .sort('createdAt')
+      .select('name avatar bio artistStatement socialLinks');
 
     if (!user) {
       return res.status(404).json({
@@ -127,6 +139,46 @@ exports.updateProfile = async (req, res, next) => {
       success: true,
       data: user,
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Change password
+// @route   PUT /api/auth/password
+// @access  Private
+exports.updatePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide your current and new password',
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password must be at least 8 characters',
+      });
+    }
+
+    const user = await User.findById(req.user.id).select('+password');
+
+    // 400, not 401: a 401 would make the frontend log the admin out
+    if (!(await user.matchPassword(currentPassword))) {
+      return res.status(400).json({
+        success: false,
+        message: 'Current password is incorrect',
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    sendTokenResponse(user, 200, res);
   } catch (err) {
     next(err);
   }

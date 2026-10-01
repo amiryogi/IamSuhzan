@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiX, HiFilter, HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { photographyAPI } from "../services/api";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import { optimizedImage, imageSrcSet } from "../utils/media";
 
 // Lightbox Modal Component
 const Lightbox = ({ photo, photos, onClose, onNavigate }) => {
@@ -81,7 +82,7 @@ const Lightbox = ({ photo, photos, onClose, onNavigate }) => {
         className="max-w-5xl max-h-[90vh] w-full"
       >
         <img
-          src={photo.imageUrl}
+          src={optimizedImage(photo.imageUrl, 2000)}
           alt={photo.title}
           className="w-full h-auto max-h-[75vh] object-contain rounded-xl"
         />
@@ -221,7 +222,11 @@ const PhotographyPage = () => {
                 className="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer"
               >
                 <img
-                  src={photo.imageUrl}
+                  src={optimizedImage(photo.imageUrl, 800)}
+                  srcSet={imageSrcSet(photo.imageUrl, [400, 800, 1200])}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  loading="lazy"
+                  decoding="async"
                   alt={photo.title}
                   className="w-full h-full object-cover transition-transform duration-500 
                            group-hover:scale-110"

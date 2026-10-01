@@ -6,7 +6,9 @@ const {
   deleteFile,
   uploadMultiple,
 } = require('../controllers/uploadController');
-const { protect } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
+
+const adminOnly = [protect, authorize('admin')];
 
 const router = express.Router();
 
@@ -55,9 +57,9 @@ const uploadMultipleMiddleware = multer({
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB
 }).array('files', 10); // Max 10 files
 
-router.post('/image', protect, uploadImageMiddleware, uploadImage);
-router.post('/video', protect, uploadVideoMiddleware, uploadVideo);
-router.post('/multiple', protect, uploadMultipleMiddleware, uploadMultiple);
-router.delete('/', protect, deleteFile);
+router.post('/image', adminOnly, uploadImageMiddleware, uploadImage);
+router.post('/video', adminOnly, uploadVideoMiddleware, uploadVideo);
+router.post('/multiple', adminOnly, uploadMultipleMiddleware, uploadMultiple);
+router.delete('/', adminOnly, deleteFile);
 
 module.exports = router;

@@ -8,19 +8,21 @@ const {
   deletePhotography,
   getCategories,
 } = require("../controllers/photographyController");
-const { protect } = require("../middleware/auth");
+const { protect, authorize, optionalAuth } = require("../middleware/auth");
+
+const adminOnly = [protect, authorize("admin")];
 
 const router = express.Router();
 
 // Public routes
-router.get("/", getAllPhotography);
+router.get("/", optionalAuth, getAllPhotography);
 router.get("/latest", getLatestPhotography);
 router.get("/categories", getCategories);
 router.get("/:id", getPhotography);
 
 // Protected routes (Admin only)
-router.post("/", protect, createPhotography);
-router.put("/:id", protect, updatePhotography);
-router.delete("/:id", protect, deletePhotography);
+router.post("/", adminOnly, createPhotography);
+router.put("/:id", adminOnly, updatePhotography);
+router.delete("/:id", adminOnly, deletePhotography);
 
 module.exports = router;

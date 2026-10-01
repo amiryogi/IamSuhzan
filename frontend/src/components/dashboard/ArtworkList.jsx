@@ -11,7 +11,7 @@ import {
   HiFilter,
 } from 'react-icons/hi';
 import toast from 'react-hot-toast';
-import { artworksAPI, categoriesAPI } from '../../services/api';
+import { artworksAPI, categoriesAPI, ADMIN_LIST } from '../../services/api';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 const ArtworkList = () => {
@@ -29,7 +29,7 @@ const ArtworkList = () => {
   const fetchData = async () => {
     try {
       const [artRes, catRes] = await Promise.all([
-        artworksAPI.getAll({ limit: 100 }),
+        artworksAPI.getAll({ limit: 100, ...ADMIN_LIST }),
         categoriesAPI.getAll(),
       ]);
       setArtworks(artRes.data.data);

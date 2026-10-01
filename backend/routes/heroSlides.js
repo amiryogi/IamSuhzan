@@ -7,18 +7,20 @@ const {
   deleteHeroSlide,
   reorderHeroSlides,
 } = require("../controllers/heroSlideController");
-const { protect } = require("../middleware/auth");
+const { protect, authorize, optionalAuth } = require("../middleware/auth");
+
+const adminOnly = [protect, authorize("admin")];
 
 const router = express.Router();
 
 // Public routes
-router.get("/", getHeroSlides);
+router.get("/", optionalAuth, getHeroSlides);
 router.get("/:id", getHeroSlide);
 
 // Protected routes
-router.post("/", protect, createHeroSlide);
-router.put("/reorder", protect, reorderHeroSlides);
-router.put("/:id", protect, updateHeroSlide);
-router.delete("/:id", protect, deleteHeroSlide);
+router.post("/", adminOnly, createHeroSlide);
+router.put("/reorder", adminOnly, reorderHeroSlides);
+router.put("/:id", adminOnly, updateHeroSlide);
+router.delete("/:id", adminOnly, deleteHeroSlide);
 
 module.exports = router;

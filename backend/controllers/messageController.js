@@ -5,11 +5,18 @@ const Message = require('../models/Message');
 // @access  Public
 exports.sendMessage = async (req, res, next) => {
     try {
-        const message = await Message.create(req.body);
+        const { name, email, subject, message: body, website } = req.body;
+
+        // Honeypot: real visitors never see or fill the hidden "website" field
+        if (website) {
+            return res.status(201).json({ success: true, data: {} });
+        }
+
+        const message = await Message.create({ name, email, subject, message: body });
 
         res.status(201).json({
             success: true,
-            data: message,
+            data: { _id: message._id },
         });
     } catch (err) {
         next(err);

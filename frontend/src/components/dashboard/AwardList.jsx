@@ -9,7 +9,7 @@ import {
   HiEyeOff,
   HiStar,
 } from "react-icons/hi";
-import { awardsAPI } from "../../services/api";
+import { awardsAPI, ADMIN_LIST } from "../../services/api";
 import LoadingSpinner from "../common/LoadingSpinner";
 
 const AwardList = () => {
@@ -24,7 +24,7 @@ const AwardList = () => {
   const fetchAwards = async () => {
     try {
       setLoading(true);
-      const response = await awardsAPI.getAll();
+      const response = await awardsAPI.getAll(ADMIN_LIST);
       setAwards(response.data.data);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch awards");

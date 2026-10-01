@@ -5,6 +5,7 @@ import { FaInstagram, FaFacebookF, FaTwitter, FaYoutube } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { authAPI } from '../../services/api';
 import MediaUploader from './MediaUploader';
+import PasswordSettings from './PasswordSettings';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 const ProfileSettings = () => {
@@ -258,6 +259,8 @@ const ProfileSettings = () => {
                     </motion.button>
                 </div>
             </form>
+
+            <PasswordSettings />
         </div>
     );
 };

@@ -1,5 +1,6 @@
 const HeroSlide = require("../models/HeroSlide");
 const cloudinary = require("../config/cloudinary");
+const { wantsHidden } = require("../middleware/auth");
 
 // @desc    Get all hero slides (active only for public, all for admin)
 // @route   GET /api/hero-slides
@@ -8,8 +9,8 @@ exports.getHeroSlides = async (req, res, next) => {
   try {
     let query = {};
 
-    // If not authenticated, only return active slides
-    if (!req.user) {
+    // Inactive slides are only listed for the admin dashboard
+    if (!wantsHidden(req)) {
       query.isActive = true;
     }
 

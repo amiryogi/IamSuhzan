@@ -6,17 +6,19 @@ const {
   updateAward,
   deleteAward,
 } = require("../controllers/awardController");
-const { protect } = require("../middleware/auth");
+const { protect, authorize, optionalAuth } = require("../middleware/auth");
+
+const adminOnly = [protect, authorize("admin")];
 
 const router = express.Router();
 
 // Public routes
-router.get("/", getAwards);
+router.get("/", optionalAuth, getAwards);
 router.get("/:id", getAward);
 
 // Protected routes
-router.post("/", protect, createAward);
-router.put("/:id", protect, updateAward);
-router.delete("/:id", protect, deleteAward);
+router.post("/", adminOnly, createAward);
+router.put("/:id", adminOnly, updateAward);
+router.delete("/:id", adminOnly, deleteAward);
 
 module.exports = router;

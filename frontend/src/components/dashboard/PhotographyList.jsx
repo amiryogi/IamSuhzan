@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { HiPlus, HiPencil, HiTrash, HiEye, HiEyeOff } from "react-icons/hi";
 import toast from "react-hot-toast";
-import { photographyAPI } from "../../services/api";
+import { photographyAPI, ADMIN_LIST } from "../../services/api";
 import LoadingSpinner from "../common/LoadingSpinner";
 
 const PhotographyList = () => {
@@ -18,7 +18,7 @@ const PhotographyList = () => {
   const fetchPhotos = async () => {
     try {
       setLoading(true);
-      const response = await photographyAPI.getAll();
+      const response = await photographyAPI.getAll(ADMIN_LIST);
       setPhotos(response.data.data);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch photography");
